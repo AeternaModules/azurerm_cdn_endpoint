@@ -157,18 +157,18 @@ EOT
     resource_group_name           = string
     content_types_to_compress     = optional(set(string))
     is_compression_enabled        = optional(bool)
-    is_http_allowed               = optional(bool, true)
-    is_https_allowed              = optional(bool, true)
+    is_http_allowed               = optional(bool) # Default: true
+    is_https_allowed              = optional(bool) # Default: true
     optimization_type             = optional(string)
     origin_host_header            = optional(string)
     origin_path                   = optional(string)
     probe_path                    = optional(string)
-    querystring_caching_behaviour = optional(string, "IgnoreQueryString")
+    querystring_caching_behaviour = optional(string) # Default: "IgnoreQueryString"
     tags                          = optional(map(string))
     origin = object({
       host_name  = string
-      http_port  = optional(number, 80)
-      https_port = optional(number, 443)
+      http_port  = optional(number) # Default: 80
+      https_port = optional(number) # Default: 443
       name       = string
     })
     delivery_rule = optional(object({
@@ -182,20 +182,20 @@ EOT
       }))
       cookies_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         selector         = string
         transforms       = optional(list(string))
       }))
       device_condition = optional(object({
         match_values     = set(string)
-        negate_condition = optional(bool, false)
-        operator         = optional(string, "Equal")
+        negate_condition = optional(bool)   # Default: false
+        operator         = optional(string) # Default: "Equal"
       }))
       http_version_condition = optional(object({
         match_values     = set(string)
-        negate_condition = optional(bool, false)
-        operator         = optional(string, "Equal")
+        negate_condition = optional(bool)   # Default: false
+        operator         = optional(string) # Default: "Equal"
       }))
       modify_request_header_action = optional(object({
         action = string
@@ -211,66 +211,66 @@ EOT
       order = number
       post_arg_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         selector         = string
         transforms       = optional(list(string))
       }))
       query_string_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
       }))
       remote_address_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
       }))
       request_body_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
       }))
       request_header_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         selector         = string
         transforms       = optional(list(string))
       }))
       request_method_condition = optional(object({
         match_values     = set(string)
-        negate_condition = optional(bool, false)
-        operator         = optional(string, "Equal")
+        negate_condition = optional(bool)   # Default: false
+        operator         = optional(string) # Default: "Equal"
       }))
       request_scheme_condition = optional(object({
         match_values     = set(string)
-        negate_condition = optional(bool, false)
-        operator         = optional(string, "Equal")
+        negate_condition = optional(bool)   # Default: false
+        operator         = optional(string) # Default: "Equal"
       }))
       request_uri_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
       }))
       url_file_extension_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
       }))
       url_file_name_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
       }))
       url_path_condition = optional(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool, false)
+        negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
       }))
@@ -278,13 +278,13 @@ EOT
         fragment      = optional(string)
         hostname      = optional(string)
         path          = optional(string)
-        protocol      = optional(string, "MatchRequest")
+        protocol      = optional(string) # Default: "MatchRequest"
         query_string  = optional(string)
         redirect_type = string
       }))
       url_rewrite_action = optional(object({
         destination             = string
-        preserve_unmatched_path = optional(bool, true)
+        preserve_unmatched_path = optional(bool) # Default: true
         source_pattern          = string
       }))
     }))
@@ -316,13 +316,13 @@ EOT
         fragment      = optional(string)
         hostname      = optional(string)
         path          = optional(string)
-        protocol      = optional(string, "MatchRequest")
+        protocol      = optional(string) # Default: "MatchRequest"
         query_string  = optional(string)
         redirect_type = string
       }))
       url_rewrite_action = optional(object({
         destination             = string
-        preserve_unmatched_path = optional(bool, true)
+        preserve_unmatched_path = optional(bool) # Default: true
         source_pattern          = string
       }))
     }))
