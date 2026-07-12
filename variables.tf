@@ -165,13 +165,13 @@ EOT
     probe_path                    = optional(string)
     querystring_caching_behaviour = optional(string) # Default: "IgnoreQueryString"
     tags                          = optional(map(string))
-    origin = object({
+    origin = list(object({
       host_name  = string
       http_port  = optional(number) # Default: 80
       https_port = optional(number) # Default: 443
       name       = string
-    })
-    delivery_rule = optional(object({
+    }))
+    delivery_rule = optional(list(object({
       cache_expiration_action = optional(object({
         behavior = string
         duration = optional(string)
@@ -180,66 +180,66 @@ EOT
         behavior   = string
         parameters = optional(string)
       }))
-      cookies_condition = optional(object({
+      cookies_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         selector         = string
         transforms       = optional(list(string))
-      }))
+      })))
       device_condition = optional(object({
         match_values     = set(string)
         negate_condition = optional(bool)   # Default: false
         operator         = optional(string) # Default: "Equal"
       }))
-      http_version_condition = optional(object({
+      http_version_condition = optional(list(object({
         match_values     = set(string)
         negate_condition = optional(bool)   # Default: false
         operator         = optional(string) # Default: "Equal"
-      }))
-      modify_request_header_action = optional(object({
+      })))
+      modify_request_header_action = optional(list(object({
         action = string
         name   = string
         value  = optional(string)
-      }))
-      modify_response_header_action = optional(object({
+      })))
+      modify_response_header_action = optional(list(object({
         action = string
         name   = string
         value  = optional(string)
-      }))
+      })))
       name  = string
       order = number
-      post_arg_condition = optional(object({
+      post_arg_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         selector         = string
         transforms       = optional(list(string))
-      }))
-      query_string_condition = optional(object({
+      })))
+      query_string_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
-      }))
-      remote_address_condition = optional(object({
+      })))
+      remote_address_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
-      }))
-      request_body_condition = optional(object({
+      })))
+      request_body_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
-      }))
-      request_header_condition = optional(object({
+      })))
+      request_header_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         selector         = string
         transforms       = optional(list(string))
-      }))
+      })))
       request_method_condition = optional(object({
         match_values     = set(string)
         negate_condition = optional(bool)   # Default: false
@@ -250,30 +250,30 @@ EOT
         negate_condition = optional(bool)   # Default: false
         operator         = optional(string) # Default: "Equal"
       }))
-      request_uri_condition = optional(object({
+      request_uri_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
-      }))
-      url_file_extension_condition = optional(object({
+      })))
+      url_file_extension_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
-      }))
-      url_file_name_condition = optional(object({
+      })))
+      url_file_name_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
-      }))
-      url_path_condition = optional(object({
+      })))
+      url_path_condition = optional(list(object({
         match_values     = optional(set(string))
         negate_condition = optional(bool) # Default: false
         operator         = string
         transforms       = optional(list(string))
-      }))
+      })))
       url_redirect_action = optional(object({
         fragment      = optional(string)
         hostname      = optional(string)
@@ -287,12 +287,12 @@ EOT
         preserve_unmatched_path = optional(bool) # Default: true
         source_pattern          = string
       }))
-    }))
-    geo_filter = optional(object({
+    })))
+    geo_filter = optional(list(object({
       action        = string
       country_codes = list(string)
       relative_path = string
-    }))
+    })))
     global_delivery_rule = optional(object({
       cache_expiration_action = optional(object({
         behavior = string
@@ -302,16 +302,16 @@ EOT
         behavior   = string
         parameters = optional(string)
       }))
-      modify_request_header_action = optional(object({
+      modify_request_header_action = optional(list(object({
         action = string
         name   = string
         value  = optional(string)
-      }))
-      modify_response_header_action = optional(object({
+      })))
+      modify_response_header_action = optional(list(object({
         action = string
         name   = string
         value  = optional(string)
-      }))
+      })))
       url_redirect_action = optional(object({
         fragment      = optional(string)
         hostname      = optional(string)

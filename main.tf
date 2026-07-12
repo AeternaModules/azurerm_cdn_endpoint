@@ -16,15 +16,18 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
   querystring_caching_behaviour = each.value.querystring_caching_behaviour
   tags                          = each.value.tags
 
-  origin {
-    host_name  = each.value.origin.host_name
-    http_port  = each.value.origin.http_port
-    https_port = each.value.origin.https_port
-    name       = each.value.origin.name
+  dynamic "origin" {
+    for_each = each.value.origin
+    content {
+      host_name  = origin.value.host_name
+      http_port  = origin.value.http_port
+      https_port = origin.value.https_port
+      name       = origin.value.name
+    }
   }
 
   dynamic "delivery_rule" {
-    for_each = each.value.delivery_rule != null ? [each.value.delivery_rule] : []
+    for_each = each.value.delivery_rule != null ? each.value.delivery_rule : []
     content {
       dynamic "cache_expiration_action" {
         for_each = delivery_rule.value.cache_expiration_action != null ? [delivery_rule.value.cache_expiration_action] : []
@@ -41,7 +44,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "cookies_condition" {
-        for_each = delivery_rule.value.cookies_condition != null ? [delivery_rule.value.cookies_condition] : []
+        for_each = delivery_rule.value.cookies_condition != null ? delivery_rule.value.cookies_condition : []
         content {
           match_values     = cookies_condition.value.match_values
           negate_condition = cookies_condition.value.negate_condition
@@ -59,7 +62,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "http_version_condition" {
-        for_each = delivery_rule.value.http_version_condition != null ? [delivery_rule.value.http_version_condition] : []
+        for_each = delivery_rule.value.http_version_condition != null ? delivery_rule.value.http_version_condition : []
         content {
           match_values     = http_version_condition.value.match_values
           negate_condition = http_version_condition.value.negate_condition
@@ -67,7 +70,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "modify_request_header_action" {
-        for_each = delivery_rule.value.modify_request_header_action != null ? [delivery_rule.value.modify_request_header_action] : []
+        for_each = delivery_rule.value.modify_request_header_action != null ? delivery_rule.value.modify_request_header_action : []
         content {
           action = modify_request_header_action.value.action
           name   = modify_request_header_action.value.name
@@ -75,7 +78,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "modify_response_header_action" {
-        for_each = delivery_rule.value.modify_response_header_action != null ? [delivery_rule.value.modify_response_header_action] : []
+        for_each = delivery_rule.value.modify_response_header_action != null ? delivery_rule.value.modify_response_header_action : []
         content {
           action = modify_response_header_action.value.action
           name   = modify_response_header_action.value.name
@@ -85,7 +88,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
       name  = delivery_rule.value.name
       order = delivery_rule.value.order
       dynamic "post_arg_condition" {
-        for_each = delivery_rule.value.post_arg_condition != null ? [delivery_rule.value.post_arg_condition] : []
+        for_each = delivery_rule.value.post_arg_condition != null ? delivery_rule.value.post_arg_condition : []
         content {
           match_values     = post_arg_condition.value.match_values
           negate_condition = post_arg_condition.value.negate_condition
@@ -95,7 +98,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "query_string_condition" {
-        for_each = delivery_rule.value.query_string_condition != null ? [delivery_rule.value.query_string_condition] : []
+        for_each = delivery_rule.value.query_string_condition != null ? delivery_rule.value.query_string_condition : []
         content {
           match_values     = query_string_condition.value.match_values
           negate_condition = query_string_condition.value.negate_condition
@@ -104,7 +107,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "remote_address_condition" {
-        for_each = delivery_rule.value.remote_address_condition != null ? [delivery_rule.value.remote_address_condition] : []
+        for_each = delivery_rule.value.remote_address_condition != null ? delivery_rule.value.remote_address_condition : []
         content {
           match_values     = remote_address_condition.value.match_values
           negate_condition = remote_address_condition.value.negate_condition
@@ -112,7 +115,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "request_body_condition" {
-        for_each = delivery_rule.value.request_body_condition != null ? [delivery_rule.value.request_body_condition] : []
+        for_each = delivery_rule.value.request_body_condition != null ? delivery_rule.value.request_body_condition : []
         content {
           match_values     = request_body_condition.value.match_values
           negate_condition = request_body_condition.value.negate_condition
@@ -121,7 +124,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "request_header_condition" {
-        for_each = delivery_rule.value.request_header_condition != null ? [delivery_rule.value.request_header_condition] : []
+        for_each = delivery_rule.value.request_header_condition != null ? delivery_rule.value.request_header_condition : []
         content {
           match_values     = request_header_condition.value.match_values
           negate_condition = request_header_condition.value.negate_condition
@@ -147,7 +150,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "request_uri_condition" {
-        for_each = delivery_rule.value.request_uri_condition != null ? [delivery_rule.value.request_uri_condition] : []
+        for_each = delivery_rule.value.request_uri_condition != null ? delivery_rule.value.request_uri_condition : []
         content {
           match_values     = request_uri_condition.value.match_values
           negate_condition = request_uri_condition.value.negate_condition
@@ -156,7 +159,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "url_file_extension_condition" {
-        for_each = delivery_rule.value.url_file_extension_condition != null ? [delivery_rule.value.url_file_extension_condition] : []
+        for_each = delivery_rule.value.url_file_extension_condition != null ? delivery_rule.value.url_file_extension_condition : []
         content {
           match_values     = url_file_extension_condition.value.match_values
           negate_condition = url_file_extension_condition.value.negate_condition
@@ -165,7 +168,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "url_file_name_condition" {
-        for_each = delivery_rule.value.url_file_name_condition != null ? [delivery_rule.value.url_file_name_condition] : []
+        for_each = delivery_rule.value.url_file_name_condition != null ? delivery_rule.value.url_file_name_condition : []
         content {
           match_values     = url_file_name_condition.value.match_values
           negate_condition = url_file_name_condition.value.negate_condition
@@ -174,7 +177,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "url_path_condition" {
-        for_each = delivery_rule.value.url_path_condition != null ? [delivery_rule.value.url_path_condition] : []
+        for_each = delivery_rule.value.url_path_condition != null ? delivery_rule.value.url_path_condition : []
         content {
           match_values     = url_path_condition.value.match_values
           negate_condition = url_path_condition.value.negate_condition
@@ -205,7 +208,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
   }
 
   dynamic "geo_filter" {
-    for_each = each.value.geo_filter != null ? [each.value.geo_filter] : []
+    for_each = each.value.geo_filter != null ? each.value.geo_filter : []
     content {
       action        = geo_filter.value.action
       country_codes = geo_filter.value.country_codes
@@ -231,7 +234,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "modify_request_header_action" {
-        for_each = global_delivery_rule.value.modify_request_header_action != null ? [global_delivery_rule.value.modify_request_header_action] : []
+        for_each = global_delivery_rule.value.modify_request_header_action != null ? global_delivery_rule.value.modify_request_header_action : []
         content {
           action = modify_request_header_action.value.action
           name   = modify_request_header_action.value.name
@@ -239,7 +242,7 @@ resource "azurerm_cdn_endpoint" "cdn_endpoints" {
         }
       }
       dynamic "modify_response_header_action" {
-        for_each = global_delivery_rule.value.modify_response_header_action != null ? [global_delivery_rule.value.modify_response_header_action] : []
+        for_each = global_delivery_rule.value.modify_response_header_action != null ? global_delivery_rule.value.modify_response_header_action : []
         content {
           action = modify_response_header_action.value.action
           name   = modify_response_header_action.value.name
