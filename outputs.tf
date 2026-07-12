@@ -1,3 +1,7 @@
+output "cdn_endpoints_id" {
+  description = "Map of id values across all cdn_endpoints, keyed the same as var.cdn_endpoints"
+  value       = { for k, v in azurerm_cdn_endpoint.cdn_endpoints : k => v.id }
+}
 output "cdn_endpoints_content_types_to_compress" {
   description = "Map of content_types_to_compress values across all cdn_endpoints, keyed the same as var.cdn_endpoints"
   value       = { for k, v in azurerm_cdn_endpoint.cdn_endpoints : k => v.content_types_to_compress }
