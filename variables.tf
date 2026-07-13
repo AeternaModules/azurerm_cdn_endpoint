@@ -335,186 +335,214 @@ EOT
     ])
     error_message = "Each origin list must contain at least 1 items"
   }
-  # --- Unconfirmed validation candidates, derived from azurerm_cdn_endpoint's provider source ---
-  # Not auto-enabled: either a bespoke provider validator we can't safely translate,
-  # or a path that crosses a list-typed block (needs its own for_each wrapping).
-  # Review, translate into a real validation{} block above, and delete once confirmed.
-  # path: location
-  #   source:    location.EnhancedValidate: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: resource_group_name
-  #   condition: length(value) <= 90
-  #   message:   [from resourcegroups.ValidateName: invalid when len(value) > 90]
-  #   source:    [from resourcegroups.ValidateName: invalid when len(value) > 90]
-  # path: resource_group_name
-  #   condition: !endswith(value, ".")
-  #   message:   [from resourcegroups.ValidateName: must not end with "."]
-  #   source:    [from resourcegroups.ValidateName: must not end with "."]
-  # path: resource_group_name
-  #   condition: length(value) != 0
-  #   message:   [from resourcegroups.ValidateName: invalid when len(value) == 0]
-  #   source:    [from resourcegroups.ValidateName: invalid when len(value) == 0]
-  # path: resource_group_name
-  #   source:    [from resourcegroups.ValidateName] !matched
-  # path: querystring_caching_behaviour
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: geo_filter.action
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: optimization_type
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: global_delivery_rule.cache_expiration_action.behavior
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: global_delivery_rule.cache_expiration_action.duration
-  #   source:    validate.RuleActionCacheExpirationDuration: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: global_delivery_rule.cache_key_query_string_action.behavior
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: global_delivery_rule.modify_request_header_action.action
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: global_delivery_rule.modify_response_header_action.action
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: global_delivery_rule.url_redirect_action.redirect_type
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: global_delivery_rule.url_redirect_action.protocol
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: global_delivery_rule.url_redirect_action.path
-  #   source:    validate.RuleActionUrlRedirectPath: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: global_delivery_rule.url_redirect_action.query_string
-  #   source:    validate.RuleActionUrlRedirectQueryString: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: global_delivery_rule.url_redirect_action.fragment
-  #   source:    validate.RuleActionUrlRedirectFragment: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: global_delivery_rule.url_rewrite_action.source_pattern
-  #   source:    validate.RuleActionUrlRewriteSourcePattern: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: global_delivery_rule.url_rewrite_action.destination
-  #   source:    validate.RuleActionUrlRewriteDestination: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: delivery_rule.name
-  #   source:    validate.EndpointDeliveryRuleName: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: delivery_rule.order
-  #   condition: value >= 1
-  #   message:   must be at least 1
-  # path: delivery_rule.cookies_condition.selector
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.cookies_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.cookies_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.cookies_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.http_version_condition.operator
-  #   condition: contains(["Equal"], value)
-  #   message:   must be one of: Equal
-  # path: delivery_rule.http_version_condition.match_values[*]
-  #   condition: contains(["0.9", "1.0", "1.1", "2.0"], value)
-  #   message:   must be one of: 0.9, 1.0, 1.1, 2.0
-  # path: delivery_rule.device_condition.operator
-  #   condition: contains(["Equal"], value)
-  #   message:   must be one of: Equal
-  # path: delivery_rule.device_condition.match_values[*]
-  #   condition: contains(["Desktop", "Mobile"], value)
-  #   message:   must be one of: Desktop, Mobile
-  # path: delivery_rule.post_arg_condition.selector
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.post_arg_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.post_arg_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.post_arg_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.query_string_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.query_string_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.query_string_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.remote_address_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.remote_address_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.request_body_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.request_body_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.request_body_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.request_header_condition.selector
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.request_header_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.request_header_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.request_header_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.request_method_condition.operator
-  #   condition: contains(["Equal"], value)
-  #   message:   must be one of: Equal
-  # path: delivery_rule.request_method_condition.match_values[*]
-  #   condition: contains(["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT"], value)
-  #   message:   must be one of: DELETE, GET, HEAD, OPTIONS, POST, PUT
-  # path: delivery_rule.request_scheme_condition.operator
-  #   condition: contains(["Equal"], value)
-  #   message:   must be one of: Equal
-  # path: delivery_rule.request_scheme_condition.match_values[*]
-  #   condition: contains(["HTTP", "HTTPS"], value)
-  #   message:   must be one of: HTTP, HTTPS
-  # path: delivery_rule.request_uri_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.request_uri_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.request_uri_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_file_extension_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_file_extension_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.url_file_extension_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_file_name_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_file_name_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.url_file_name_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_path_condition.operator
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_path_condition.match_values[*]
-  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
-  # path: delivery_rule.url_path_condition.transforms[*]
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.cache_expiration_action.behavior
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.cache_expiration_action.duration
-  #   source:    validate.RuleActionCacheExpirationDuration: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: delivery_rule.cache_key_query_string_action.behavior
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.modify_request_header_action.action
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.modify_response_header_action.action
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_redirect_action.redirect_type
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_redirect_action.protocol
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: delivery_rule.url_redirect_action.path
-  #   source:    validate.RuleActionUrlRedirectPath: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: delivery_rule.url_redirect_action.query_string
-  #   source:    validate.RuleActionUrlRedirectQueryString: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: delivery_rule.url_redirect_action.fragment
-  #   source:    validate.RuleActionUrlRedirectFragment: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: delivery_rule.url_rewrite_action.source_pattern
-  #   source:    validate.RuleActionUrlRewriteSourcePattern: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: delivery_rule.url_rewrite_action.destination
-  #   source:    validate.RuleActionUrlRewriteDestination: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
-  # path: tags
-  #   condition: length(value) <= 50
-  #   message:   [from tags.Validate: invalid when len(value) > 50]
-  #   source:    [from tags.Validate: invalid when len(value) > 50]
-  # path: tags
-  #   condition: length(value) <= 512
-  #   message:   [from tags.Validate: invalid when len(value) > 512]
-  #   source:    [from tags.Validate: invalid when len(value) > 512]
-  # path: tags
-  #   source:    [from tags.Validate] err != nil
-  # path: tags
-  #   condition: length(value) <= 256
-  #   message:   [from tags.Validate: invalid when len(value) > 256]
-  #   source:    [from tags.Validate: invalid when len(value) > 256]
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        length(v.resource_group_name) <= 90
+      )
+    ])
+    error_message = "[from resourcegroups.ValidateName: invalid when len(value) > 90]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        !endswith(v.resource_group_name, ".")
+      )
+    ])
+    error_message = "[from resourcegroups.ValidateName: must not end with \".\"]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        length(v.resource_group_name) != 0
+      )
+    ])
+    error_message = "[from resourcegroups.ValidateName: invalid when len(value) == 0]"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.order >= 1)])
+      )
+    ])
+    error_message = "must be at least 1"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.cookies_condition == null || alltrue([for item in item.cookies_condition : (length(trimspace(item.selector)) > 0)]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.cookies_condition == null || alltrue([for item in item.cookies_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.http_version_condition == null || alltrue([for item in item.http_version_condition : (item.operator == null || (contains(["Equal"], item.operator)))]))])
+      )
+    ])
+    error_message = "must be one of: Equal"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.http_version_condition == null || alltrue([for item in item.http_version_condition : (alltrue([for x in item.match_values : contains(["0.9", "1.0", "1.1", "2.0"], x)]))]))])
+      )
+    ])
+    error_message = "must be one of: 0.9, 1.0, 1.1, 2.0"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.device_condition == null || (item.device_condition.operator == null || (contains(["Equal"], item.device_condition.operator))))])
+      )
+    ])
+    error_message = "must be one of: Equal"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.device_condition == null || (alltrue([for x in item.device_condition.match_values : contains(["Desktop", "Mobile"], x)])))])
+      )
+    ])
+    error_message = "must be one of: Desktop, Mobile"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.post_arg_condition == null || alltrue([for item in item.post_arg_condition : (length(trimspace(item.selector)) > 0)]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.post_arg_condition == null || alltrue([for item in item.post_arg_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.query_string_condition == null || alltrue([for item in item.query_string_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.remote_address_condition == null || alltrue([for item in item.remote_address_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.request_body_condition == null || alltrue([for item in item.request_body_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.request_header_condition == null || alltrue([for item in item.request_header_condition : (length(trimspace(item.selector)) > 0)]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.request_header_condition == null || alltrue([for item in item.request_header_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.request_method_condition == null || (item.request_method_condition.operator == null || (contains(["Equal"], item.request_method_condition.operator))))])
+      )
+    ])
+    error_message = "must be one of: Equal"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.request_method_condition == null || (alltrue([for x in item.request_method_condition.match_values : contains(["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT"], x)])))])
+      )
+    ])
+    error_message = "must be one of: DELETE, GET, HEAD, OPTIONS, POST, PUT"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.request_scheme_condition == null || (item.request_scheme_condition.operator == null || (contains(["Equal"], item.request_scheme_condition.operator))))])
+      )
+    ])
+    error_message = "must be one of: Equal"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.request_scheme_condition == null || (alltrue([for x in item.request_scheme_condition.match_values : contains(["HTTP", "HTTPS"], x)])))])
+      )
+    ])
+    error_message = "must be one of: HTTP, HTTPS"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.request_uri_condition == null || alltrue([for item in item.request_uri_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.url_file_extension_condition == null || alltrue([for item in item.url_file_extension_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.url_file_name_condition == null || alltrue([for item in item.url_file_name_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.delivery_rule == null || alltrue([for item in v.delivery_rule : (item.url_path_condition == null || alltrue([for item in item.url_path_condition : (item.match_values == null || (alltrue([for x in item.match_values : length(trimspace(x)) > 0])))]))])
+      )
+    ])
+    error_message = "must not be empty or only whitespace"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        v.tags == null || (length(v.tags) <= 50)
+      )
+    ])
+    error_message = "[from tags.Validate: invalid when len(value) > 50]"
+  }
+  # Note: 52 additional provider-side validators are enforced at apply time but not mirrored as validation{} blocks here (bespoke or non-mechanically-translatable).
 }
 
