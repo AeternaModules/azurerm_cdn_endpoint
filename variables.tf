@@ -157,18 +157,18 @@ EOT
     resource_group_name           = string
     content_types_to_compress     = optional(set(string))
     is_compression_enabled        = optional(bool)
-    is_http_allowed               = optional(bool) # Default: true
-    is_https_allowed              = optional(bool) # Default: true
+    is_http_allowed               = optional(bool)
+    is_https_allowed              = optional(bool)
     optimization_type             = optional(string)
     origin_host_header            = optional(string)
     origin_path                   = optional(string)
     probe_path                    = optional(string)
-    querystring_caching_behaviour = optional(string) # Default: "IgnoreQueryString"
+    querystring_caching_behaviour = optional(string)
     tags                          = optional(map(string))
     origin = list(object({
       host_name  = string
-      http_port  = optional(number) # Default: 80
-      https_port = optional(number) # Default: 443
+      http_port  = optional(number)
+      https_port = optional(number)
       name       = string
     }))
     delivery_rule = optional(list(object({
@@ -182,20 +182,20 @@ EOT
       }))
       cookies_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         selector         = string
         transforms       = optional(list(string))
       })))
       device_condition = optional(object({
         match_values     = set(string)
-        negate_condition = optional(bool)   # Default: false
-        operator         = optional(string) # Default: "Equal"
+        negate_condition = optional(bool)
+        operator         = optional(string)
       }))
       http_version_condition = optional(list(object({
         match_values     = set(string)
-        negate_condition = optional(bool)   # Default: false
-        operator         = optional(string) # Default: "Equal"
+        negate_condition = optional(bool)
+        operator         = optional(string)
       })))
       modify_request_header_action = optional(list(object({
         action = string
@@ -211,66 +211,66 @@ EOT
       order = number
       post_arg_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         selector         = string
         transforms       = optional(list(string))
       })))
       query_string_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         transforms       = optional(list(string))
       })))
       remote_address_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
       })))
       request_body_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         transforms       = optional(list(string))
       })))
       request_header_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         selector         = string
         transforms       = optional(list(string))
       })))
       request_method_condition = optional(object({
         match_values     = set(string)
-        negate_condition = optional(bool)   # Default: false
-        operator         = optional(string) # Default: "Equal"
+        negate_condition = optional(bool)
+        operator         = optional(string)
       }))
       request_scheme_condition = optional(object({
         match_values     = set(string)
-        negate_condition = optional(bool)   # Default: false
-        operator         = optional(string) # Default: "Equal"
+        negate_condition = optional(bool)
+        operator         = optional(string)
       }))
       request_uri_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         transforms       = optional(list(string))
       })))
       url_file_extension_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         transforms       = optional(list(string))
       })))
       url_file_name_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         transforms       = optional(list(string))
       })))
       url_path_condition = optional(list(object({
         match_values     = optional(set(string))
-        negate_condition = optional(bool) # Default: false
+        negate_condition = optional(bool)
         operator         = string
         transforms       = optional(list(string))
       })))
@@ -278,13 +278,13 @@ EOT
         fragment      = optional(string)
         hostname      = optional(string)
         path          = optional(string)
-        protocol      = optional(string) # Default: "MatchRequest"
+        protocol      = optional(string)
         query_string  = optional(string)
         redirect_type = string
       }))
       url_rewrite_action = optional(object({
         destination             = string
-        preserve_unmatched_path = optional(bool) # Default: true
+        preserve_unmatched_path = optional(bool)
         source_pattern          = string
       }))
     })))
@@ -316,17 +316,25 @@ EOT
         fragment      = optional(string)
         hostname      = optional(string)
         path          = optional(string)
-        protocol      = optional(string) # Default: "MatchRequest"
+        protocol      = optional(string)
         query_string  = optional(string)
         redirect_type = string
       }))
       url_rewrite_action = optional(object({
         destination             = string
-        preserve_unmatched_path = optional(bool) # Default: true
+        preserve_unmatched_path = optional(bool)
         source_pattern          = string
       }))
     }))
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.cdn_endpoints : (
+        length(v.origin) >= 1
+      )
+    ])
+    error_message = "Each origin list must contain at least 1 items"
+  }
   # --- Unconfirmed validation candidates, derived from azurerm_cdn_endpoint's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -353,6 +361,147 @@ EOT
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
   # path: optimization_type
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: global_delivery_rule.cache_expiration_action.behavior
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: global_delivery_rule.cache_expiration_action.duration
+  #   source:    validate.RuleActionCacheExpirationDuration: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: global_delivery_rule.cache_key_query_string_action.behavior
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: global_delivery_rule.modify_request_header_action.action
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: global_delivery_rule.modify_response_header_action.action
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: global_delivery_rule.url_redirect_action.redirect_type
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: global_delivery_rule.url_redirect_action.protocol
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: global_delivery_rule.url_redirect_action.path
+  #   source:    validate.RuleActionUrlRedirectPath: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: global_delivery_rule.url_redirect_action.query_string
+  #   source:    validate.RuleActionUrlRedirectQueryString: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: global_delivery_rule.url_redirect_action.fragment
+  #   source:    validate.RuleActionUrlRedirectFragment: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: global_delivery_rule.url_rewrite_action.source_pattern
+  #   source:    validate.RuleActionUrlRewriteSourcePattern: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: global_delivery_rule.url_rewrite_action.destination
+  #   source:    validate.RuleActionUrlRewriteDestination: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: delivery_rule.name
+  #   source:    validate.EndpointDeliveryRuleName: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: delivery_rule.order
+  #   condition: value >= 1
+  #   message:   must be at least 1
+  # path: delivery_rule.cookies_condition.selector
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.cookies_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.cookies_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.cookies_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.http_version_condition.operator
+  #   condition: contains(["Equal"], value)
+  #   message:   must be one of: Equal
+  # path: delivery_rule.http_version_condition.match_values[*]
+  #   condition: contains(["0.9", "1.0", "1.1", "2.0"], value)
+  #   message:   must be one of: 0.9, 1.0, 1.1, 2.0
+  # path: delivery_rule.device_condition.operator
+  #   condition: contains(["Equal"], value)
+  #   message:   must be one of: Equal
+  # path: delivery_rule.device_condition.match_values[*]
+  #   condition: contains(["Desktop", "Mobile"], value)
+  #   message:   must be one of: Desktop, Mobile
+  # path: delivery_rule.post_arg_condition.selector
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.post_arg_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.post_arg_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.post_arg_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.query_string_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.query_string_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.query_string_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.remote_address_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.remote_address_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.request_body_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.request_body_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.request_body_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.request_header_condition.selector
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.request_header_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.request_header_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.request_header_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.request_method_condition.operator
+  #   condition: contains(["Equal"], value)
+  #   message:   must be one of: Equal
+  # path: delivery_rule.request_method_condition.match_values[*]
+  #   condition: contains(["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT"], value)
+  #   message:   must be one of: DELETE, GET, HEAD, OPTIONS, POST, PUT
+  # path: delivery_rule.request_scheme_condition.operator
+  #   condition: contains(["Equal"], value)
+  #   message:   must be one of: Equal
+  # path: delivery_rule.request_scheme_condition.match_values[*]
+  #   condition: contains(["HTTP", "HTTPS"], value)
+  #   message:   must be one of: HTTP, HTTPS
+  # path: delivery_rule.request_uri_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.request_uri_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.request_uri_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_file_extension_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_file_extension_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.url_file_extension_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_file_name_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_file_name_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.url_file_name_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_path_condition.operator
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_path_condition.match_values[*]
+  #   source:    validation.StringIsNotWhiteSpace(...) - no translation rule yet, add one
+  # path: delivery_rule.url_path_condition.transforms[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.cache_expiration_action.behavior
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.cache_expiration_action.duration
+  #   source:    validate.RuleActionCacheExpirationDuration: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: delivery_rule.cache_key_query_string_action.behavior
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.modify_request_header_action.action
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.modify_response_header_action.action
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_redirect_action.redirect_type
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_redirect_action.protocol
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: delivery_rule.url_redirect_action.path
+  #   source:    validate.RuleActionUrlRedirectPath: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: delivery_rule.url_redirect_action.query_string
+  #   source:    validate.RuleActionUrlRedirectQueryString: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: delivery_rule.url_redirect_action.fragment
+  #   source:    validate.RuleActionUrlRedirectFragment: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: delivery_rule.url_rewrite_action.source_pattern
+  #   source:    validate.RuleActionUrlRewriteSourcePattern: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: delivery_rule.url_rewrite_action.destination
+  #   source:    validate.RuleActionUrlRewriteDestination: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
   # path: tags
   #   condition: length(value) <= 50
   #   message:   [from tags.Validate: invalid when len(value) > 50]
