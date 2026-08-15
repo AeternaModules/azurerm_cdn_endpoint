@@ -20,7 +20,7 @@ output "cdn_endpoints_geo_filter" {
 }
 output "cdn_endpoints_global_delivery_rule" {
   description = "Map of global_delivery_rule values across all cdn_endpoints, keyed the same as var.cdn_endpoints"
-  value       = { for k, v in azurerm_cdn_endpoint.cdn_endpoints : k => v.global_delivery_rule if v.global_delivery_rule != null && length(v.global_delivery_rule) > 0 }
+  value       = { for k, v in azurerm_cdn_endpoint.cdn_endpoints : k => one(v.global_delivery_rule) if v.global_delivery_rule != null && length(v.global_delivery_rule) > 0 }
 }
 output "cdn_endpoints_is_compression_enabled" {
   description = "Map of is_compression_enabled values across all cdn_endpoints, keyed the same as var.cdn_endpoints"
